@@ -12,19 +12,19 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3(@popperjs/core@2.11.8)
       bootstrap-vue-next:
-        specifier: ^0.26.7
-        version: 0.26.7(vue@3.5.13)
+        specifier: ^0.26.8
+        version: 0.26.8(vue@3.5.13)
       firebase:
         specifier: 10.0.0
         version: 10.0.0(react-native@0.71.19(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(react@18.2.0))
       pinia:
-        specifier: ^2.2.6
-        version: 2.2.8(vue@3.5.13)
+        specifier: ^2.3.0
+        version: 2.3.0(vue@3.5.13)
       vue:
         specifier: ^3.5.13
         version: 3.5.13
       vue-router:
-        specifier: ^4.4.5
+        specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13)
       vuefire:
         specifier: ^3.2.0
@@ -1560,8 +1560,8 @@ packages:
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
 
-  bootstrap-vue-next@0.26.7:
-    resolution: {integrity: sha512-ZO+MZCHQpcs+mTj+mYeN7ixM3thSY1e9W4socFvilIAaXhjXxhOhuLuGBc0+OqcAbgrCIQ7C0RNWmIIuGvrH6w==}
+  bootstrap-vue-next@0.26.8:
+    resolution: {integrity: sha512-2WolMPi4XB0J/736PPglDCIjUz2pwvOhu3SLjQYP0Rh5IncspMZMkUCa/H28Vh45xQadFtrYeBPyPF3JrpbadA==}
     peerDependencies:
       vue: ^3.5.13
 
@@ -2657,15 +2657,12 @@ packages:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
 
-  pinia@2.2.8:
-    resolution: {integrity: sha512-NRTYy2g+kju5tBRe0oNlriZIbMNvma8ZJrpHsp3qudyiMEA8jMmPPKQ2QMHg0Oc4BkUyQYWagACabrwriCK9HQ==}
+  pinia@2.3.0:
+    resolution: {integrity: sha512-ohZj3jla0LL0OH5PlLTDMzqKiVw2XARmC1XYLdLWIPBMdhDW/123ZWr4zVAhtJm+aoSkFa13pYXskAvAscIkhQ==}
     peerDependencies:
-      '@vue/composition-api': ^1.4.0
       typescript: '>=4.4.4'
-      vue: ^2.6.14 || ^3.5.11
+      vue: ^2.7.0 || ^3.5.11
     peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
       typescript:
         optional: true
 
@@ -5342,7 +5339,7 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  bootstrap-vue-next@0.26.7(vue@3.5.13):
+  bootstrap-vue-next@0.26.8(vue@3.5.13):
     dependencies:
       vue: 3.5.13
 
@@ -6613,11 +6610,13 @@ snapshots:
 
   pify@4.0.1: {}
 
-  pinia@2.2.8(vue@3.5.13):
+  pinia@2.3.0(vue@3.5.13):
     dependencies:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.13
       vue-demi: 0.14.10(vue@3.5.13)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
 
   pirates@4.0.6: {}
 

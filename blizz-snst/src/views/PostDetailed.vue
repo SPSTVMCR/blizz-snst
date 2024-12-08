@@ -48,8 +48,8 @@
       >
         <div class="d-flex flex-column align-items-center w-75">
           <BFormTextarea
-            v-model="commentContent"
-            placeholder="What's your thoughts on this?"
+            v-model="postContent"
+            placeholder="Your thoughts on this?"
             class="mt-2 mx-3 h-100"
             required
           ></BFormTextarea>
@@ -61,7 +61,7 @@
           <BButton
             variant="outline-danger"
             class="me-2 mt-2 h-50"
-            @click="clearCommentContent"
+            @click="clearpostContent"
             >Clear</BButton
           >
         </div>
@@ -98,12 +98,14 @@ export default {
     const userStore = useUserStore();
     const post = ref(null);
     const commenting = ref(false);
-    const commentContent = ref("");
+    const postContent = ref(null);
+
+    const postId = route.params.id;
+    const postRef = doc(db, "generalPosts", postId);
+
     //Fetching the post
     const fetchPost = async () => {
       //Get the post's id from the route params
-      const postId = route.params.id;
-      const postRef = doc(db, "generalPosts", postId);
       const postSnapshot = await getDoc(postRef);
 
       if (postSnapshot.exists()) {
@@ -124,22 +126,19 @@ export default {
     };
     //Adding a new comment
     const addComment = async () => {
-      if (!commentContent.value.trim()) return;
       try {
-        await addDoc(
-          collection(postRef, "comments"),
-          {
-            content: commentContent.value,
-            timestamp: Timestamp.fromDate(new Date()),
-            user: userStore.user.displayName,
-          },
-          { merge: true },
-          console.log("added comment")
-        );
-        commentContent.value = "";
+        console.log(postContent);
+        await addDoc(collection(postRef, "comments"), {
+          content: postContent.value,
+          timestamp: Timestamp.fromDate(new Date()),
+          user: userStore.user.displayName,
+        });
+        console.log("added comment");
+        postContent.value = "";
       } catch (error) {
         console.error("Error adding comment:", error);
       }
+      console.log(postRef);
     };
     //On rendering
     onMounted(() => {

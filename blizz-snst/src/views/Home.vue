@@ -1,4 +1,3 @@
-
 <template>
   <div class="home">
     <div
@@ -198,6 +197,7 @@ export default {
      */
     const navigateToDetails = (post) => {
       console.log(post.id);
+      localStorage.setItem("currentPost", JSON.stringify(post));
       router.push({ name: "Post", params: { id: post.id } });
     };
 
