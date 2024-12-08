@@ -1,4 +1,11 @@
-<script></script>
+<script>
+
+export default {
+  setup() {
+
+  },
+};
+</script>
 
 <template>
   <h1>Lobby</h1>

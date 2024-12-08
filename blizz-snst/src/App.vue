@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-    <Header class="sticky-top" />
-    <router-view v-slot="{ Component }">
+    <Header class="sticky-top"/>
+    <RouterView v-slot="{ Component }">
       <transition name="fade">
-        <component :is="Component" />
+        <component :is="Component"/>
       </transition>
-    </router-view>
+    </RouterView>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "./firebase/firebase";
-import { RouterLink, RouterView } from "vue-router";
+import {onMounted, ref} from "vue";
+import {onAuthStateChanged, signOut} from "firebase/auth";
+import {auth} from "./firebase/firebase";
+
 
 export default {
   setup() {
@@ -48,16 +48,19 @@ export default {
 #app {
   text-align: center;
 }
+
 header {
   padding: 10px;
   background-color: #333;
   color: white;
 }
+
 nav {
   display: flex;
   gap: 15px;
   justify-content: center;
 }
+
 button {
   background: #007bff;
   color: white;
@@ -66,16 +69,10 @@ button {
   cursor: pointer;
   border-radius: 5px;
 }
+
 button:hover {
   background: #0056b3;
 }
-.fade-in {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}
 
-.fade-in.show {
-  opacity: 1;
-}
 </style>
 
