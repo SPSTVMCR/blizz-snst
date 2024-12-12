@@ -9,12 +9,17 @@ console.log(userStore.user);
 
 <template>
   <BNavbar toggleable="lg" variant="primary" v-b-color-mode="'dark'">
-    <BNavbarBrand to="/" class="fw-bold">BLIZZ</BNavbarBrand>
+    <BNavbarBrand to="/" class="fw-bold ml-2"
+      >BLIZZ
+      <IFontistoSnowflake7
+        class="fw-1000 text-light mx-1 mt-0 fs-4"
+      ></IFontistoSnowflake7
+    ></BNavbarBrand>
+
     <BNavbarNav>
       <BNavItem class="text-capitalize fw-bold">{{
-          route.meta.title || $route.name
-        }}</BNavItem>
-      
+        route.meta.title || $route.name
+      }}</BNavItem>
     </BNavbarNav>
     <BNavbarToggle target="nav-collapse" />
     <BCollapse id="nav-collapse" is-nav>

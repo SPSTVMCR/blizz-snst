@@ -1,9 +1,18 @@
 <script>
-
+import { onMounted, ref, watch } from "vue";
+import { db } from "../firebase/firebase";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  Timestamp,
+} from "firebase/firestore";
+import { useUserStore } from "@/stores/user";
+import { useRoute, useRouter } from "vue-router";
 export default {
-  setup() {
-
-  },
+  setup() {},
 };
 </script>
 
