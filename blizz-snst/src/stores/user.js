@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import {defineStore} from "pinia";
+import {ref} from "vue";
+import {onAuthStateChanged, signOut} from "firebase/auth";
+import {auth} from "../firebase/firebase";
 import router from "../router";
 
 /**
@@ -39,6 +39,11 @@ export const useUserStore = defineStore("user", () => {
       localStorage.setItem("user", JSON.stringify(user.value));
     });
   };
-
-  return { user, logout, fetchUser };
+  const addRecentRoom = (roomId) => {
+    if (user.value) {
+      user.value.recentRooms.push(roomId);
+      localStorage.setItem("user", JSON.stringify(user.value));
+    }
+  }
+  return {user, logout, fetchUser, currentPost, addRecentRoom};
 });
