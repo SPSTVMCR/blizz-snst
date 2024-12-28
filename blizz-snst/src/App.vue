@@ -6,16 +6,21 @@
         <component :is="Component"/>
       </transition>
     </RouterView>
+    <!--    <Footer/> Footer component is supposed to be after the RouterView, only visible when scrolled down to the bottom-->
+
   </div>
+  <Footer/>
 </template>
 
 <script>
 import {onMounted, ref} from "vue";
 import {onAuthStateChanged, signOut} from "firebase/auth";
 import {auth} from "./firebase/firebase";
+import Footer from "@/components/Footer.vue";
 
 
 export default {
+  components: {Footer},
   setup() {
     const user = ref(null);
 
@@ -44,9 +49,25 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+
+body {
+  background-size: cover;
+  background-repeat: repeat-y;
+  background-position: center;
+  background-image: url("../../blizz-snst/src/assets/vivid-blurred-colorful-wallpaper-background.jpg");
+}
+
 #app {
   text-align: center;
+
+}
+
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  margin-top: 2rem;
 }
 
 header {
@@ -60,6 +81,7 @@ nav {
   gap: 15px;
   justify-content: center;
 }
+
 
 button {
   background: #007bff;

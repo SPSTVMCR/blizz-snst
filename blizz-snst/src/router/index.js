@@ -21,7 +21,7 @@ const routes = [
   { path: "/register", name: "Register", component: Register },
   { path: "/lobby", name: "Lobby", component: Lobby },
   { path:"/post/:id", name: "Post", component: PostDetailed },
-  {path: "/chat/:roomId", name: "Chat", component: Chat},
+    {path: "/chat/:id", name: "Chat", component: Chat},
   {path: "/:catchAll(.*)", redirect: "/"},
 ];
 

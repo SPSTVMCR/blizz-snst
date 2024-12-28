@@ -1,12 +1,22 @@
 <template>
   <div class="home">
+    <div class=" w-100 d-flex flex-row align-items-center justify-content-evenly">
+      <div class="d-flex flex-column align-items-center"><h2
+          class="text-primary fw-bold text-wrap mx-2 mt-3 mb-2 align-self-center"> Welcome, {{
+          currentUser.displayName
+        }}. </h2></div>
+      <div class="d-flex flex-column align-items-center ml-2">
+        <h6 class="text-purple-200 fw-bold text-wrap mx-2 mt-3 align-self-center"> {{ currentDate }} </h6>
+        <h6 class="text-info fw-bold text-wrap mx-2 align-self-center"> {{ currentTime }} </h6>
+      </div>
+    </div>
     <div
-        class="my-2 ml-2 d-flex flex-row w-100 justify-content-evenly align-items-center overflow-hidden"
+        class="my-2 ml-2 d-flex flex-lg-row flex-sm-column w-100 justify-content-evenly align-items-center overflow-hidden"
     >
       <div class="d-flex flex-column align-items-center">
-        <h4 class="text-info">{{ currentTime }}</h4>
+
       </div>
-      <BForm @submit.prevent="addPost" class="w-75 d-flex flex-row form-container">
+      <BForm @submit.prevent="addPost" class=" d-flex flex-row form-container" style="width: 90%">
         <div class="d-flex flex-column align-items-center w-75">
           <BFormTextarea
               v-model="postTitle"
@@ -40,40 +50,37 @@
         </h5> -->
       </BForm>
     </div>
-    <!--TODO: Toggleable sidebar  -->
+
 
     <!--Post template-->
     <div v-if="posts.length > 0" class="posts mt-3">
       <BCard
           v-for="post in posts"
           :key="post.id"
-          class="post mb my-3 mx-3 p-0"
+          class="post mb my-3 mx-4 p-0"
           @click="navigateToDetails(post)"
           no-body
       >
         <div class="d-flex flex-row post-content-div">
-          <div
-              class="d-flex flex-row bg-light info-container"
-              style="width: 45%"
-          >
+          <div class="d-flex flex-row bg-light info-container" style="width: 45%">
             <img
+                alt="Snowflake"
+                class="post-image"
                 src="https://media.istockphoto.com/id/470107850/vector/snowflakes-icon-white-on-the-blue-background.jpg?s=612x612&w=0&k=20&c=6wY43xcp29gSVyctNP4X6j5nz1PMsFyU4xoa4YBguqQ="
-                alt="Snowflake Icon"/>
+            />
             <div class="d-flex flex-column align-items-start wrap">
               <h5 class="card-title mt-3 mb-2 mx-3">{{ post.user }}</h5>
-              <small class="text-muted mx-3"> Blizz Snowview User </small>
+              <small class="text-muted mx-3">Blizz Snowview User</small>
             </div>
           </div>
           <div class="d-flex flex-column align-items-start w-100">
-            <div
-                class="bg-primary d-flex flex-row align-items-center w-100 justify-content-between"
-            >
-              <p class="card-title mx-3 my-2 fw-bold fs-6 text-light">
+            <div class="bg-primary d-flex flex-row align-items-center w-100 justify-content-between">
+              <button class="btn btn-primary" @click="navigateToDetails(post)">
                 {{ post.title }}
-              </p>
+              </button>
             </div>
             <p class="card-text mx-3 my-3">
-              {{ truncateText(post.content, 360) }}
+              {{ truncateText(post.content, 348) }}
             </p>
           </div>
         </div>
@@ -86,8 +93,18 @@
     <div class="d-flex align-items-center m-3" v-else>
       <strong>Loading...</strong>
       <BSpinner class="ms-auto" variant="primary"/>
+      <div class="skeleton-screen">
+        <div class="skeleton-post">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-text"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -104,7 +121,8 @@ export default {
     const posts = ref([]);
     const postTitle = ref("");
     const postContent = ref("");
-
+    const currentTime = ref("Loading...");
+    const currentDate = ref("Loading...");
     // Vue Router composables
     const route = useRoute();
     const router = useRouter();
@@ -194,6 +212,15 @@ export default {
       router.push({name: "Post", params: {id: post.id}});
     };
 
+    const fetchCurrentTime = () => {
+      const date = new Date();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+      currentTime.value = `${hours}:${minutes}:${seconds}`;
+      currentDate.value = date.toLocaleDateString();
+    }
+
     // Watch for route changes and fetch posts if on the Home route
     watch(route, () => {
       if (route.name === "Home") {
@@ -202,7 +229,11 @@ export default {
     });
 
     // Fetch posts on component mount
-    onMounted(fetchPosts);
+    onMounted(() => {
+      fetchPosts();
+      fetchCurrentTime();
+      setInterval(fetchCurrentTime, 1000);
+    });
 
     return {
       posts,
@@ -214,6 +245,8 @@ export default {
       currentUser,
       clearPostContent,
       navigateToDetails,
+      currentTime,
+      currentDate
     };
   },
 };
@@ -222,6 +255,7 @@ export default {
 <style scoped>
 body {
   overflow: hidden !important;
+  background-image: url("../assets/vivid-blurred-colorful-wallpaper-background.jpg") !important;
 }
 
 @media screen and (max-width: 600px) {
@@ -254,4 +288,9 @@ body {
     height: 100% !important;
   }
 }
+
+.post:last-child {
+  margin-bottom: 0 !important;
+}
+
 </style>

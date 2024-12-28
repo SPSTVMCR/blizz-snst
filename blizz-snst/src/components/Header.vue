@@ -1,6 +1,11 @@
 <script setup>
-import { useUserStore } from "@/stores/user";
-import { useRoute } from "vue-router";
+import {useUserStore} from "@/stores/user";
+import {useRoute} from "vue-router";
+import {ref} from "vue";
+
+const searchTerm = ref("");
+
+
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -46,13 +51,16 @@ console.log(userStore.user);
             >Sign Up</BDropdownItem
           >
         </BNavItemDropdown>
+        <BNavItem to="/" v-if="userStore.user && route.name !== 'Home'">Home</BNavItem>
+        <BNavItem to="/lobby" v-if="userStore.user && route.name !== 'Lobby'">Chatrooms</BNavItem>
       </BNavbarNav>
-      <BNavForm class="d-flex">
+
+      <BNavForm class="d-flex" v-if="userStore.user">
         <BFormInput
           class="me-2 bg-light text-dark border-none"
           placeholder="Search"
         />
-        <BButton type="submit" variant="outline-light">Search</BButton>
+        <BButton type="submit" variant="outline-light" @click="search">Search</BButton>
       </BNavForm>
     </BCollapse>
   </BNavbar>

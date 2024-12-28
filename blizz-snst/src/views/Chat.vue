@@ -1,77 +1,71 @@
 <template>
   <div class="chat-view">
     <h1>Chat</h1>
-    <div class="messages-container">
-      <div v-for="message in messages" :key="message.id" class="message">
-        <span class="username">{{ message.username }}</span>
+    <div class="messages">
+      <div class="message" v-for="message in messages" :key="message.id">
+        <span class="username">{{ message.username }}:</span>
         <span class="text">{{ message.text }}</span>
       </div>
     </div>
-    <form class="send-message-form" @submit.prevent="sendMessage">
-      <input type="text" v-model="newMessage" placeholder="Type a message...">
-      <button type="submit">Send</button>
-    </form>
+    <div class="input-container">
+      <input type="text" v-model="newMessage" placeholder="Type your message">
+      <button @click="sendMessage">Send</button>
+    </div>
   </div>
 </template>
 
 <script>
-import {onMounted, ref} from 'vue';
-import {db} from '../firebase/firebase';
-import {addDoc, collection, onSnapshot, orderBy, query, Timestamp,} from 'firebase/firestore';
-import {useUserStore} from '@/stores/user.js';
-import router from "@/router/index.js";
+import {onMounted, ref} from "vue";
+import {db} from "../firebase/firebase";
+import {addDoc, collection, doc, onSnapshot, orderBy, query, Timestamp,} from "firebase/firestore";
+import {useUserStore} from "@/stores/user";
+import {useRoute} from "vue-router";
 
 export default {
   setup() {
     const messages = ref([]);
-    const newMessage = ref('');
-    const chatroomId = router.currentRoute.value.params.roomId;
+    const newMessage = ref("");
+    const route = useRoute();
+    const roomId = route.params.id;
+    const roomRef = doc(db, "chatrooms", roomId);
+    const messagesRef = collection(roomRef, "messages");
+    const userStore = useUserStore();
 
+    // Fetch messages from Firestore
     const fetchMessages = async () => {
-      const messagesQuery = query(
-          collection(db, 'chatrooms', chatroomId.value, 'messages'), // Update the path to the specific chatroom
-          orderBy('timestamp', 'asc')
-      );
-
-      try {
-        onSnapshot(messagesQuery, (querySnapshot) => {
-          messages.value = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+      const q = query(messagesRef, orderBy("timestamp", "asc"));
+      onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            messages.value.push(change.doc.data());
+          }
         });
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
+
+      });
+
     };
+
+    onMounted(fetchMessages);
 
     const sendMessage = async () => {
-      try {
-        await addDoc(
-            collection(db, 'chatrooms', chatroomId.value, 'messages'), // Update the path to the specific chatroom
-            {
-              text: newMessage.value,
-              username: useUserStore().user.displayName,
-              timestamp: Timestamp.fromDate(new Date()),
-            }
-        );
-        newMessage.value = '';
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    };
+      if (!newMessage.value.trim()) return;
+      if (!userStore.user) return;
 
-    onMounted(() => {
-      fetchMessages();
-    });
+      const message = {
+        text: newMessage.value,
+        username: userStore.user.displayName,
+        timestamp: Timestamp.fromDate(new Date()),
+      };
+      await addDoc(messagesRef, message);
+      newMessage.value = "";
+    };
 
     return {
       messages,
       newMessage,
       sendMessage,
-      chatroomId, // Add the chatroomId to the returned object
     };
-  },
+  }
 };
 </script>
 

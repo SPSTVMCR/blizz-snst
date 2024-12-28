@@ -13,20 +13,18 @@
       <p>Account Type: {{ accountType }}</p>
     </div>
     <div class="d-flex flex-column align-items-center w-50">
-      <button class="btn btn-primary" @click="userStore.logout">Logout</button>
-      <button class="btn btn-primary">Change Password</button>
-      <button class="btn btn-primary">Change Username</button>
-      <button class="btn btn-primary">Delete Account</button>
+      <button class="btn btn-primary" @click="logout">Logout</button>
+      <button class="btn btn-primary" @click="changePassword">Change Password</button>
+      <button class="btn btn-primary" @click="deleteAccount">Delete Account</button>
     </div>
   </BCard>
   <p v-else>You are not logged in. How can you even see this?</p>
 </template>
 
 <script>
-import { ref } from "vue";
-import { getAuth } from "firebase/auth";
-import { useUserStore } from "@/stores/user";
-import { Timestamp } from "firebase/firestore";
+import {ref} from "vue";
+import {useUserStore} from "@/stores/user";
+import {deleteUser, getAuth, sendPasswordResetEmail} from "firebase/auth";
 import router from "@/router";
 
 export default {
@@ -42,13 +40,32 @@ export default {
           accountType.value = "Email Account";
         } else if (user.value.providerData[0].providerId === "google.com") {
           accountType.value = "Google Account";
-        } else {
-          accountType.value = "uncertified dummy account";
         }
+      } else {
+        accountType.value = "uncertified dummy account";
       }
     }
 
-    return { user, userStore, auth, accountType };
+    const logout = () => {
+      userStore.logout();
+
+    };
+
+    const changePassword = () => {
+      sendPasswordResetEmail(auth, user.value.email);
+      alert("Password reset email sent. Please check your inbox.");
+    };
+
+    const deleteAccount = () => {
+      deleteUser(auth.currentUser).then(() => {
+        alert("Account deleted successfully.");
+
+        localStorage.removeItem("user");
+        router.push("/login");
+      });
+    };
+
+    return {user, userStore, auth, accountType, logout, changePassword, deleteAccount};
   },
 };
 </script>

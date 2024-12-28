@@ -197,8 +197,9 @@ export default {
       comments,
       clearCurrentCommentContent,
     };
-  },
+  }
 };
+
 </script>
 <style scoped>
 body {
@@ -231,7 +232,8 @@ body {
   }
 
   .post-content-div {
-    flex-direction: row !important;
+    flex-direction: column !important;
+    width: 100% !important;
   }
 
   .comment-content-div {
