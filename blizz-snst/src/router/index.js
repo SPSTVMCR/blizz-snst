@@ -34,6 +34,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   let requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   let isAuthenticated = auth.currentUser;
+  document.title = to.name;
   if (JSON.parse(localStorage.getItem("user"))) {
     isAuthenticated = true;
     requiresAuth = false;
