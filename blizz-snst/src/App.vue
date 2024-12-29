@@ -9,7 +9,7 @@
     <!--    <Footer/> Footer component is supposed to be after the RouterView, only visible when scrolled down to the bottom-->
 
   </div>
-  <Footer/>
+  <Footer v-if="route.name !== 'Chat'"/>
 </template>
 
 <script>
@@ -17,13 +17,13 @@ import {onMounted, ref} from "vue";
 import {onAuthStateChanged, signOut} from "firebase/auth";
 import {auth} from "./firebase/firebase";
 import Footer from "@/components/Footer.vue";
-
+import {useRoute} from "vue-router";
 
 export default {
   components: {Footer},
   setup() {
     const user = ref(null);
-
+    const route = useRoute();
     // Watch authentication state
     onMounted(() => {
       onAuthStateChanged(auth, (currentUser) => {
@@ -44,6 +44,7 @@ export default {
     return {
       user,
       logout,
+      route,
     };
   },
 };
@@ -52,8 +53,8 @@ export default {
 <style>
 
 body {
-  background-size: cover;
-  background-repeat: repeat-y;
+  background-size: auto;
+
   background-position: center;
   background-image: url("../../blizz-snst/src/assets/vivid-blurred-colorful-wallpaper-background.jpg");
 }

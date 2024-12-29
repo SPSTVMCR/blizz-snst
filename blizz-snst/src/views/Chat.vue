@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-view">
+  <div class="chat-view d-flex flex-column" style="margin-bottom: 10rem">
     <h1>Chat</h1>
     <div class="messages">
       <div class="message" v-for="message in messages" :key="message.id">
@@ -7,10 +7,13 @@
         <span class="text">{{ message.text }}</span>
       </div>
     </div>
-    <div class="input-container">
-      <input type="text" v-model="newMessage" placeholder="Type your message">
-      <button @click="sendMessage">Send</button>
-    </div>
+  </div>
+  <div
+      class="input-container d-flex flex-row align-items-center justify-content-center w-100 mt-3 position-fixed bottom-0 mb-5">
+    <BInputGroup style="width: 90%">
+      <BFormInput type="text" v-model="newMessage" placeholder="Type your message"></BFormInput>
+      <BButton @click="sendMessage">Send</BButton>
+    </BInputGroup>
   </div>
 </template>
 
@@ -31,6 +34,30 @@ export default {
     const messagesRef = collection(roomRef, "messages");
     const userStore = useUserStore();
 
+    const chatbot = async () => {
+      const url = 'https://intellichat-ai-chatbot.p.rapidapi.com/chat';
+      const options = {
+        method: 'POST',
+        headers: {
+          'x-rapidapi-key': 'fb66a3adfcmshfb7690aaa83cad5p112578jsne873809a5992',
+          'x-rapidapi-host': 'intellichat-ai-chatbot.p.rapidapi.com',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          // Delete the /chatbot from the message
+          user_input: newMessage.value.toString().replace("/chatbot", ""),
+        })
+      };
+      const response = await fetch(url, options);
+      const result = await response.text();
+      const messageBot = {
+        text: JSON.parse(result).response,
+        username: "Chatbot",
+        timestamp: Timestamp.fromDate(new Date()),
+      }
+      await addDoc(messagesRef, messageBot);
+
+    }
     // Fetch messages from Firestore
     const fetchMessages = async () => {
       const q = query(messagesRef, orderBy("timestamp", "asc"));
@@ -48,15 +75,19 @@ export default {
     onMounted(fetchMessages);
 
     const sendMessage = async () => {
-      if (!newMessage.value.trim()) return;
-      if (!userStore.user) return;
-
       const message = {
         text: newMessage.value,
         username: userStore.user.displayName,
         timestamp: Timestamp.fromDate(new Date()),
       };
-      await addDoc(messagesRef, message);
+      if (!newMessage.value.trim()) return;
+      if (!userStore.user) return;
+      if (newMessage.value.toLowerCase().includes("/chatbot")) {
+        await addDoc(messagesRef, message);
+        await chatbot();
+      } else {
+        await addDoc(messagesRef, message);
+      }
       newMessage.value = "";
     };
 
@@ -64,6 +95,7 @@ export default {
       messages,
       newMessage,
       sendMessage,
+      chatbot,
     };
   }
 };
